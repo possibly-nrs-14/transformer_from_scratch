@@ -7,9 +7,6 @@ class PositionalEmbedding(nn.Module):
     def __init__(self, embedding_dim, max_seq_len=1000):
         super(PositionalEmbedding, self).__init__()
         self.embedding_dim = embedding_dim
-
-        # Create constant 'pe' matrix with values dependent on
-        # position and embedding dimension
         pe = torch.zeros(max_seq_len, embedding_dim)
         position = torch.arange(0, max_seq_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(torch.arange(0, embedding_dim, 2).float() * (-math.log(10000.0) / embedding_dim))
