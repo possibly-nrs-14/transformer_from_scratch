@@ -75,16 +75,15 @@ class Decoder_Layer(nn.Module):
             scores = scores.masked_fill(tgt_mask == 0, float('-inf'))
 
         attn = F.softmax(scores, dim=-1)
-        attn = self.dropout(attn)  # Apply dropout to attention weights
+        attn = self.dropout(attn)
 
         context = torch.matmul(attn, V)
         context = context.transpose(1, 2).contiguous().view(batch_size, seq_len, self.embedding_dim)
 
         output1 = self.Wo(context)
-        output1 = self.dropout(output1)  # Apply dropout after self-attention output
+        output1 = self.dropout(output1)
         output1 = self.layer_norm1(x + output1)
 
-        # Encoder-Decoder Attention
         Q = self.Wq2(output1)
         K = self.Wk2(encoder_output)
         V = self.Wv2(encoder_output)
@@ -102,18 +101,18 @@ class Decoder_Layer(nn.Module):
             scores = scores.masked_fill(src_mask == 0, float('-inf'))
 
         attn = F.softmax(scores, dim=-1)
-        attn = self.dropout(attn)  # Apply dropout to attention weights
+        attn = self.dropout(attn) 
 
         context = torch.matmul(attn, V)
         context = context.transpose(1, 2).contiguous().view(batch_size, seq_len, self.embedding_dim)
 
         output2 = self.Wo2(context)
-        output2 = self.dropout(output2)  # Apply dropout after encoder-decoder attention
+        output2 = self.dropout(output2) 
         output2 = self.layer_norm2(output1 + output2)
 
         # Feed-Forward Network
         ffnn_output = self.ffnn(output2)
-        ffnn_output = self.dropout(ffnn_output)  # Apply dropout after FFN
+        ffnn_output = self.dropout(ffnn_output)  
 
         output = self.layer_norm3(output2 + ffnn_output)
 
@@ -138,7 +137,6 @@ class Decoder(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, texts, encoder_output, src_mask=None):
-        # Embed input tokens and add positional embeddings
         embeddings = self.embedding(texts)
         embeddings = self.positional_embedding(embeddings)
         embeddings = self.dropout(embeddings) 
