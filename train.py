@@ -24,7 +24,7 @@ class Transformer(nn.Module):
     def generate(self, texts, start_token_id, end_token_id, max_len=50):
         src_mask = create_padding_mask(texts, pad_token_id=0)
         encoder_output = self.encoder(texts, src_mask=src_mask)
-        batch_size = texts.size(0)  # Get the batch size
+        batch_size = texts.size(0) 
         generated_sequences = torch.full((batch_size, 1), start_token_id, dtype=torch.long).to(texts.device)  
         for i in range(max_len):
             decoder_output = self.decoder(generated_sequences, encoder_output,  src_mask=src_mask)
