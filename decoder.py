@@ -110,7 +110,6 @@ class Decoder_Layer(nn.Module):
         output2 = self.dropout(output2) 
         output2 = self.layer_norm2(output1 + output2)
 
-        # Feed-Forward Network
         ffnn_output = self.ffnn(output2)
         ffnn_output = self.dropout(ffnn_output)  
 
